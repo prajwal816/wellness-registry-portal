@@ -6,7 +6,9 @@ interface User {
   id: string;
   email: string;
   fullName: string;
+  address: string;
   role: 'startup' | 'official' | 'regulator';
+  createdAt: Date;
 }
 
 interface AuthContextType {
@@ -50,7 +52,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         id: foundUser.id,
         email: foundUser.email,
         fullName: foundUser.fullName,
-        role: foundUser.role
+        address: foundUser.address,
+        role: foundUser.role,
+        createdAt: foundUser.createdAt
       };
       
       setUser(safeUser);
@@ -94,7 +98,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         id: newUser.id,
         email: newUser.email,
         fullName: newUser.fullName,
-        role: newUser.role
+        address: newUser.address,
+        role: newUser.role,
+        createdAt: newUser.createdAt
       };
       
       setUser(safeUser);
