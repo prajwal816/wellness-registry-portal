@@ -30,6 +30,8 @@ interface Application {
   founderName?: string;
   founderEmail?: string;
   founderPhone?: string;
+  ideaExplanation?: string; // New field for storing the startup idea explanation
+  aiScore?: number; // New field for storing the AI-generated score
 }
 
 // This is a mock database - in a real app, you'd use a proper database
@@ -135,3 +137,5 @@ class MockDatabase {
 
 // Export a singleton instance
 export const db = new MockDatabase();
+
+export type { User, Application };

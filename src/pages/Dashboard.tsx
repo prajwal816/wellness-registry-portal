@@ -5,14 +5,12 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
-import { db } from '@/lib/db';
 import { 
   LayoutDashboard, 
   User, 
   ClipboardCheck, 
   Clock, 
   LifeBuoy, 
-  Settings, 
   LogOut, 
   FileText, 
   FilePlus2, 
@@ -23,12 +21,17 @@ import {
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { db, Application } from '@/lib/db';
+import ProfileView from '@/components/ProfileView';
+import ApprovalsList from '@/components/ApprovalsList';
+import PendingTasksList from '@/components/PendingTasksList';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [applications, setApplications] = useState<any[]>([]);
+  const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeView, setActiveView] = useState<string>('dashboard');
 
   // Stats for the dashboard
   const [stats, setStats] = useState({
@@ -108,6 +111,206 @@ const Dashboard = () => {
     return `APP${numPart.padStart(3, '0')}`;
   };
 
+  const renderMainContent = () => {
+    switch (activeView) {
+      case 'profile':
+        return user ? <ProfileView user={user} /> : null;
+      case 'approvals':
+        return <ApprovalsList applications={applications} />;
+      case 'pending-tasks':
+        return <PendingTasksList applications={applications} />;
+      case 'dashboard':
+      default:
+        return (
+          <>
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-blue-50 p-6 rounded-lg shadow-sm flex items-center">
+                <div className="mr-4 p-3 bg-white rounded-full">
+                  <FileText size={24} className="text-ayush-blue" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">{stats.total} Applications</h3>
+                  <p className="text-gray-600">Total submissions</p>
+                </div>
+              </div>
+              
+              <div className="bg-yellow-50 p-6 rounded-lg shadow-sm flex items-center">
+                <div className="mr-4 p-3 bg-white rounded-full">
+                  <Clock3 size={24} className="text-yellow-600" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">{stats.pending} Pending</h3>
+                  <p className="text-gray-600">Awaiting review</p>
+                </div>
+              </div>
+              
+              <div className="bg-green-50 p-6 rounded-lg shadow-sm flex items-center">
+                <div className="mr-4 p-3 bg-white rounded-full">
+                  <CheckCircle size={24} className="text-green-600" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">{stats.approved} Approved</h3>
+                  <p className="text-gray-600">Successfully registered</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Tabs for Applications and Notifications */}
+            <Tabs defaultValue="applications" className="mb-8">
+              <TabsList className="border-b border-gray-200 w-full rounded-none bg-transparent p-0 mb-6">
+                <TabsTrigger 
+                  value="applications"
+                  className="data-[state=active]:border-b-2 data-[state=active]:border-ayush-green rounded-none px-6 py-3 data-[state=active]:shadow-none bg-transparent data-[state=active]:bg-transparent"
+                >
+                  Applications
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="notifications"
+                  className="data-[state=active]:border-b-2 data-[state=active]:border-ayush-green rounded-none px-6 py-3 data-[state=active]:shadow-none bg-transparent data-[state=active]:bg-transparent"
+                >
+                  Notifications
+                  {notifications.length > 0 && (
+                    <span className="ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {notifications.length}
+                    </span>
+                  )}
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="applications" className="mt-0">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-semibold text-gray-800">Your Applications</h2>
+                  <Button 
+                    onClick={() => navigate('/application-form')} 
+                    className="bg-ayush-green hover:bg-ayush-blue"
+                  >
+                    <FilePlus2 size={16} className="mr-2" />
+                    New Application
+                  </Button>
+                </div>
+                
+                {loading ? (
+                  <div className="text-center py-8">
+                    <p>Loading applications...</p>
+                  </div>
+                ) : applications.length === 0 ? (
+                  <div className="bg-white p-8 rounded-lg border border-gray-200 text-center">
+                    <FileText size={40} className="mx-auto text-gray-400 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-800 mb-2">No Applications Yet</h3>
+                    <p className="text-gray-600 mb-6">
+                      You haven't submitted any AYUSH startup applications yet. Start by creating a new application.
+                    </p>
+                    <Button 
+                      onClick={() => navigate('/application-form')} 
+                      className="bg-ayush-green hover:bg-ayush-blue"
+                    >
+                      <FilePlus2 size={16} className="mr-2" />
+                      Create Application
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {applications.map((app) => (
+                      <div key={app.id} className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <h3 className="text-lg font-semibold text-gray-800">{app.companyName}</h3>
+                            <p className="text-sm text-gray-500 mt-1">
+                              Application ID: {formatApplicationId(app.id)} • <span className="capitalize">{app.type}</span>
+                            </p>
+                          </div>
+                          {getStatusBadge(app.status)}
+                        </div>
+                        
+                        <div className="mb-4">
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>Progress</span>
+                            <span>{getProgressValue(app.status)}%</span>
+                          </div>
+                          <Progress value={getProgressValue(app.status)} className="h-2" />
+                        </div>
+                        
+                        {app.aiScore !== undefined && (
+                          <div className="mb-4 bg-gray-50 p-3 rounded-md">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium">AI Evaluation Score:</span>
+                              <span className={`text-sm font-bold ${
+                                app.aiScore >= 70 ? 'text-green-600' : 
+                                app.aiScore >= 40 ? 'text-yellow-600' : 'text-red-600'
+                              }`}>
+                                {app.aiScore}/100
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                        
+                        <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
+                          <span>Submitted: {new Date(app.createdAt).toLocaleDateString()}</span>
+                          {app.status === 'under-review' && (
+                            <span>Under final review by the committee</span>
+                          )}
+                          {app.status === 'submitted' && (
+                            <span>Additional documentation may be requested</span>
+                          )}
+                        </div>
+                        
+                        <div className="flex justify-end space-x-3">
+                          <Button 
+                            variant="outline" 
+                            className="border-ayush-green text-ayush-green"
+                            onClick={() => navigate(`/application/${app.id}`)}
+                          >
+                            View Details
+                          </Button>
+                          {(app.status === 'draft' || app.status === 'submitted') && (
+                            <Button 
+                              className="bg-ayush-green hover:bg-ayush-blue"
+                              onClick={() => navigate(`/application/${app.id}/edit`)}
+                            >
+                              Edit Application
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
+              
+              <TabsContent value="notifications" className="mt-0">
+                <h2 className="text-xl font-semibold text-gray-800 mb-6">Notifications</h2>
+                
+                {notifications.length === 0 ? (
+                  <div className="bg-white p-8 rounded-lg border border-gray-200 text-center">
+                    <p className="text-gray-600">You have no notifications at this time.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {notifications.map((notification, index) => (
+                      <div 
+                        key={index} 
+                        className="bg-white p-4 rounded-lg border border-gray-200 flex"
+                      >
+                        <div className={`p-2 rounded-full mr-4 ${notification.isRead ? 'bg-gray-100' : 'bg-ayush-light-green'}`}>
+                          {notification.icon}
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-gray-800">{notification.title}</h4>
+                          <p className="text-sm text-gray-600">{notification.message}</p>
+                          <p className="text-xs text-gray-400 mt-1">{notification.time}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
+          </>
+        );
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
@@ -128,8 +331,8 @@ const Dashboard = () => {
               <ul className="space-y-1">
                 <li>
                   <button 
-                    className="w-full flex items-center p-3 rounded-md bg-ayush-light-green text-ayush-green font-medium"
-                    onClick={() => navigate('/dashboard')}
+                    className={`w-full flex items-center p-3 rounded-md ${activeView === 'dashboard' ? 'bg-ayush-light-green text-ayush-green font-medium' : 'text-gray-700 hover:bg-gray-100'}`}
+                    onClick={() => setActiveView('dashboard')}
                   >
                     <LayoutDashboard size={18} className="mr-3" />
                     Dashboard
@@ -137,8 +340,8 @@ const Dashboard = () => {
                 </li>
                 <li>
                   <button 
-                    className="w-full flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-100"
-                    onClick={() => navigate('/profile')}
+                    className={`w-full flex items-center p-3 rounded-md ${activeView === 'profile' ? 'bg-ayush-light-green text-ayush-green font-medium' : 'text-gray-700 hover:bg-gray-100'}`}
+                    onClick={() => setActiveView('profile')}
                   >
                     <User size={18} className="mr-3" />
                     Profile
@@ -146,8 +349,8 @@ const Dashboard = () => {
                 </li>
                 <li>
                   <button 
-                    className="w-full flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-100"
-                    onClick={() => navigate('/applications')}
+                    className={`w-full flex items-center p-3 rounded-md ${activeView === 'approvals' ? 'bg-ayush-light-green text-ayush-green font-medium' : 'text-gray-700 hover:bg-gray-100'}`}
+                    onClick={() => setActiveView('approvals')}
                   >
                     <ClipboardCheck size={18} className="mr-3" />
                     Approvals
@@ -155,8 +358,8 @@ const Dashboard = () => {
                 </li>
                 <li>
                   <button 
-                    className="w-full flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-100"
-                    onClick={() => navigate('/tasks')}
+                    className={`w-full flex items-center p-3 rounded-md ${activeView === 'pending-tasks' ? 'bg-ayush-light-green text-ayush-green font-medium' : 'text-gray-700 hover:bg-gray-100'}`}
+                    onClick={() => setActiveView('pending-tasks')}
                   >
                     <Clock size={18} className="mr-3" />
                     Pending Tasks
@@ -169,15 +372,6 @@ const Dashboard = () => {
                   >
                     <LifeBuoy size={18} className="mr-3" />
                     Support
-                  </button>
-                </li>
-                <li>
-                  <button 
-                    className="w-full flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-100"
-                    onClick={() => navigate('/settings')}
-                  >
-                    <Settings size={18} className="mr-3" />
-                    Settings
                   </button>
                 </li>
               </ul>
@@ -201,179 +395,21 @@ const Dashboard = () => {
           <div className="flex-1 overflow-auto p-6">
             <div className="max-w-6xl mx-auto">
               <div className="mb-6">
-                <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-                <p className="text-gray-600">Manage your AYUSH registration applications and profile</p>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  {activeView === 'dashboard' && 'Dashboard'}
+                  {activeView === 'profile' && 'User Profile'}
+                  {activeView === 'approvals' && 'Approved Applications'}
+                  {activeView === 'pending-tasks' && 'Pending Tasks'}
+                </h1>
+                <p className="text-gray-600">
+                  {activeView === 'dashboard' && 'Manage your AYUSH registration applications and profile'}
+                  {activeView === 'profile' && 'View and manage your account information'}
+                  {activeView === 'approvals' && 'View your approved AYUSH applications'}
+                  {activeView === 'pending-tasks' && 'Applications that require your attention'}
+                </p>
               </div>
               
-              {/* Stats Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="bg-blue-50 p-6 rounded-lg shadow-sm flex items-center">
-                  <div className="mr-4 p-3 bg-white rounded-full">
-                    <FileText size={24} className="text-ayush-blue" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900">{stats.total} Applications</h3>
-                    <p className="text-gray-600">Total submissions</p>
-                  </div>
-                </div>
-                
-                <div className="bg-yellow-50 p-6 rounded-lg shadow-sm flex items-center">
-                  <div className="mr-4 p-3 bg-white rounded-full">
-                    <Clock3 size={24} className="text-yellow-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900">{stats.pending} Pending</h3>
-                    <p className="text-gray-600">Awaiting review</p>
-                  </div>
-                </div>
-                
-                <div className="bg-green-50 p-6 rounded-lg shadow-sm flex items-center">
-                  <div className="mr-4 p-3 bg-white rounded-full">
-                    <CheckCircle size={24} className="text-green-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900">{stats.approved} Approved</h3>
-                    <p className="text-gray-600">Successfully registered</p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Tabs for Applications and Notifications */}
-              <Tabs defaultValue="applications" className="mb-8">
-                <TabsList className="border-b border-gray-200 w-full rounded-none bg-transparent p-0 mb-6">
-                  <TabsTrigger 
-                    value="applications"
-                    className="data-[state=active]:border-b-2 data-[state=active]:border-ayush-green rounded-none px-6 py-3 data-[state=active]:shadow-none bg-transparent data-[state=active]:bg-transparent"
-                  >
-                    Applications
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="notifications"
-                    className="data-[state=active]:border-b-2 data-[state=active]:border-ayush-green rounded-none px-6 py-3 data-[state=active]:shadow-none bg-transparent data-[state=active]:bg-transparent"
-                  >
-                    Notifications
-                    {notifications.length > 0 && (
-                      <span className="ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                        {notifications.length}
-                      </span>
-                    )}
-                  </TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="applications" className="mt-0">
-                  <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-semibold text-gray-800">Your Applications</h2>
-                    <Button 
-                      onClick={() => navigate('/application-form')} 
-                      className="bg-ayush-green hover:bg-ayush-blue"
-                    >
-                      <FilePlus2 size={16} className="mr-2" />
-                      New Application
-                    </Button>
-                  </div>
-                  
-                  {loading ? (
-                    <div className="text-center py-8">
-                      <p>Loading applications...</p>
-                    </div>
-                  ) : applications.length === 0 ? (
-                    <div className="bg-white p-8 rounded-lg border border-gray-200 text-center">
-                      <FileText size={40} className="mx-auto text-gray-400 mb-4" />
-                      <h3 className="text-lg font-medium text-gray-800 mb-2">No Applications Yet</h3>
-                      <p className="text-gray-600 mb-6">
-                        You haven't submitted any AYUSH startup applications yet. Start by creating a new application.
-                      </p>
-                      <Button 
-                        onClick={() => navigate('/application-form')} 
-                        className="bg-ayush-green hover:bg-ayush-blue"
-                      >
-                        <FilePlus2 size={16} className="mr-2" />
-                        Create Application
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="space-y-6">
-                      {applications.map((app) => (
-                        <div key={app.id} className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-                          <div className="flex justify-between items-start mb-4">
-                            <div>
-                              <h3 className="text-lg font-semibold text-gray-800">{app.companyName}</h3>
-                              <p className="text-sm text-gray-500 mt-1">
-                                Application ID: {formatApplicationId(app.id)} • <span className="capitalize">{app.type}</span>
-                              </p>
-                            </div>
-                            {getStatusBadge(app.status)}
-                          </div>
-                          
-                          <div className="mb-4">
-                            <div className="flex justify-between text-sm mb-1">
-                              <span>Progress</span>
-                              <span>{getProgressValue(app.status)}%</span>
-                            </div>
-                            <Progress value={getProgressValue(app.status)} className="h-2" />
-                          </div>
-                          
-                          <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
-                            <span>Submitted: {new Date(app.createdAt).toLocaleDateString()}</span>
-                            {app.status === 'under-review' && (
-                              <span>Under final review by the committee</span>
-                            )}
-                            {app.status === 'submitted' && (
-                              <span>Additional documentation may be requested</span>
-                            )}
-                          </div>
-                          
-                          <div className="flex justify-end space-x-3">
-                            <Button 
-                              variant="outline" 
-                              className="border-ayush-green text-ayush-green"
-                              onClick={() => navigate(`/application/${app.id}`)}
-                            >
-                              View Details
-                            </Button>
-                            {(app.status === 'draft' || app.status === 'submitted') && (
-                              <Button 
-                                className="bg-ayush-green hover:bg-ayush-blue"
-                                onClick={() => navigate(`/application/${app.id}/edit`)}
-                              >
-                                Edit Application
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </TabsContent>
-                
-                <TabsContent value="notifications" className="mt-0">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-6">Notifications</h2>
-                  
-                  {notifications.length === 0 ? (
-                    <div className="bg-white p-8 rounded-lg border border-gray-200 text-center">
-                      <p className="text-gray-600">You have no notifications at this time.</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {notifications.map((notification, index) => (
-                        <div 
-                          key={index} 
-                          className="bg-white p-4 rounded-lg border border-gray-200 flex"
-                        >
-                          <div className={`p-2 rounded-full mr-4 ${notification.isRead ? 'bg-gray-100' : 'bg-ayush-light-green'}`}>
-                            {notification.icon}
-                          </div>
-                          <div>
-                            <h4 className="font-medium text-gray-800">{notification.title}</h4>
-                            <p className="text-sm text-gray-600">{notification.message}</p>
-                            <p className="text-xs text-gray-400 mt-1">{notification.time}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </TabsContent>
-              </Tabs>
+              {renderMainContent()}
             </div>
           </div>
         </div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
@@ -13,6 +12,8 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/db';
 import { FileUploader } from '@/components/FileUploader';
+import IdeaExplanation from '@/components/IdeaExplanation';
+import { scoreApplication } from '@/lib/ai-scoring';
 
 const ApplicationForm = () => {
   const { user } = useAuth();
@@ -31,6 +32,7 @@ const ApplicationForm = () => {
     founderEmail: '',
     founderPhone: '',
     documents: [] as string[],
+    ideaExplanation: '',
   });
   
   // Manage file uploads
@@ -71,6 +73,10 @@ const ApplicationForm = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleIdeaExplanationChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, ideaExplanation: value }));
+  };
+
   const handleFileUpload = (type: string, files: string | string[]) => {
     setUploadedFiles(prev => ({ ...prev, [type]: files }));
     
@@ -98,6 +104,15 @@ const ApplicationForm = () => {
         toast({
           title: "Missing Information",
           description: "Please fill in all required fields",
+          variant: "destructive",
+        });
+        return;
+      }
+    } else if (currentStep === 3) {
+      if (!formData.ideaExplanation) {
+        toast({
+          title: "Missing Information",
+          description: "Please explain your startup idea",
           variant: "destructive",
         });
         return;
@@ -133,12 +148,31 @@ const ApplicationForm = () => {
         return;
       }
 
+      // Generate AI score for the application
+      const { overallScore, status } = scoreApplication(
+        formData.ideaExplanation,
+        formData.description,
+        formData.businessType,
+        formData.documents
+      );
+
+      // Create the application with the AI score
       const application = await db.createApplication({
         userId: user.id,
-        status: 'submitted',
+        status, // Use AI-determined status
         type: formData.businessType as 'ayurveda' | 'yoga' | 'unani' | 'siddha' | 'homeopathy',
         companyName: formData.companyName,
         documents: formData.documents,
+        registrationNumber: formData.registrationNumber,
+        foundingDate: formData.foundingDate,
+        address: formData.address,
+        website: formData.website,
+        description: formData.description,
+        founderName: formData.founderName,
+        founderEmail: formData.founderEmail,
+        founderPhone: formData.founderPhone,
+        ideaExplanation: formData.ideaExplanation,
+        aiScore: overallScore,
       });
 
       toast({
@@ -204,8 +238,9 @@ const ApplicationForm = () => {
             <div className="flex justify-between mb-8 px-4">
               {renderStepIndicator(1, "Basic Information")}
               {renderStepIndicator(2, "Business Details")}
-              {renderStepIndicator(3, "Document Upload")}
-              {renderStepIndicator(4, "Review & Submit")}
+              {renderStepIndicator(3, "Idea Explanation")}
+              {renderStepIndicator(4, "Document Upload")}
+              {renderStepIndicator(5, "Review & Submit")}
             </div>
             
             <div className="mt-6">
@@ -360,6 +395,16 @@ const ApplicationForm = () => {
               
               {currentStep === 3 && (
                 <div className="space-y-6">
+                  <h2 className="text-xl font-semibold text-ayush-blue mb-4">Idea Explanation</h2>
+                  <IdeaExplanation 
+                    value={formData.ideaExplanation}
+                    onChange={handleIdeaExplanationChange}
+                  />
+                </div>
+              )}
+              
+              {currentStep === 4 && (
+                <div className="space-y-6">
                   <h2 className="text-xl font-semibold text-ayush-blue mb-4">Document Upload</h2>
                   
                   <p className="text-sm text-gray-600 mb-6">
@@ -428,7 +473,7 @@ const ApplicationForm = () => {
                 </div>
               )}
               
-              {currentStep === 4 && (
+              {currentStep === 5 && (
                 <div className="space-y-6">
                   <h2 className="text-xl font-semibold text-ayush-blue mb-4">Review & Submit</h2>
                   
@@ -465,6 +510,21 @@ const ApplicationForm = () => {
                         <div className="md:col-span-2">
                           <p className="text-sm font-medium text-gray-500">Company Description</p>
                           <p className="text-gray-800">{formData.description}</p>
+                        </div>
+
+                        <div className="md:col-span-2">
+                          <p className="text-sm font-medium text-gray-500">Idea Explanation</p>
+                          <p className="text-gray-800">{formData.ideaExplanation.length > 200 
+                            ? `${formData.ideaExplanation.substring(0, 200)}...` 
+                            : formData.ideaExplanation}</p>
+                          {formData.ideaExplanation.length > 200 && (
+                            <button 
+                              className="text-ayush-green text-sm mt-1 hover:underline"
+                              onClick={() => alert(formData.ideaExplanation)}
+                            >
+                              Read more
+                            </button>
+                          )}
                         </div>
                       </div>
                       
@@ -514,7 +574,7 @@ const ApplicationForm = () => {
                     <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
                       <p className="text-sm text-yellow-800">
                         By submitting this application, you certify that all information provided is accurate and complete.
-                        Your application will be reviewed by the AYUSH regulatory authorities.
+                        Your application will be reviewed by the AYUSH regulatory authorities and our AI scoring system.
                       </p>
                     </div>
                   </div>
@@ -535,7 +595,7 @@ const ApplicationForm = () => {
                   <div></div>
                 )}
                 
-                {currentStep < 4 ? (
+                {currentStep < 5 ? (
                   <Button 
                     onClick={nextStep}
                     className="bg-ayush-green hover:bg-ayush-blue"
