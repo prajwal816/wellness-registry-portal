@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,17 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// AYUSH theme colors
+				ayush: {
+					'green': '#2A9D8F',
+					'blue': '#264653',
+					'saffron': '#E9C46A',
+					'orange': '#F4A261',
+					'red': '#E76F51',
+					'light-green': '#E3F2ED',
+					'light-blue': '#E3E5ED',
+					'light-saffron': '#F9F2E2',
 				}
 			},
 			borderRadius: {
