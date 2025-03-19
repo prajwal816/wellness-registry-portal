@@ -21,6 +21,15 @@ interface Application {
   documents: string[];
   createdAt: Date;
   updatedAt: Date;
+  // Additional fields that can be stored from the form
+  registrationNumber?: string;
+  foundingDate?: string;
+  address?: string;
+  website?: string;
+  description?: string;
+  founderName?: string;
+  founderEmail?: string;
+  founderPhone?: string;
 }
 
 // This is a mock database - in a real app, you'd use a proper database
@@ -94,6 +103,19 @@ class MockDatabase {
     localStorage.setItem('ayush_applications', JSON.stringify(this.applications));
     
     return updatedApplication;
+  }
+
+  async deleteApplication(id: string): Promise<boolean> {
+    const index = this.applications.findIndex(app => app.id === id);
+    
+    if (index === -1) return false;
+    
+    this.applications.splice(index, 1);
+    
+    // Update localStorage
+    localStorage.setItem('ayush_applications', JSON.stringify(this.applications));
+    
+    return true;
   }
 
   // Load data from localStorage on initialization

@@ -14,6 +14,9 @@ import Dashboard from "./pages/Dashboard";
 import Resources from "./pages/Resources";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
+import ApplicationForm from "./pages/ApplicationForm";
+import ApplicationDetails from "./pages/ApplicationDetails";
+import FAQ from "./pages/FAQ";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +34,9 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/about" element={<About />} />
+            <Route path="/application-form" element={<ApplicationForm />} />
+            <Route path="/application/:id" element={<ApplicationDetails />} />
+            <Route path="/faq" element={<FAQ />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
