@@ -13,6 +13,7 @@ import ApplicationDetails from '@/pages/ApplicationDetails';
 import EditApplication from '@/pages/EditApplication';
 import { AuthProvider } from '@/lib/auth-context';
 import { Toaster } from '@/components/ui/toaster';
+import AyushChatbot from '@/components/AyushChatbot';
 import './App.css';
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Route path="/edit-application/:id" element={<EditApplication />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <AyushChatbot />
         <Toaster />
       </Router>
     </AuthProvider>

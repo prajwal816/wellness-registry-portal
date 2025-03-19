@@ -108,10 +108,11 @@ export const scoreApplication = (
   overallScore = Math.round(overallScore);
   
   // Determine application status based on score
+  // Updated threshold from 70 to 45 as per requirement
   let status = 'under-review';
-  if (overallScore >= 70) {
+  if (overallScore >= 45) {
     status = 'approved';
-  } else if (overallScore < 40) {
+  } else {
     status = 'rejected';
   }
   
