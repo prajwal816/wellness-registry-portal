@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
@@ -33,7 +32,6 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [activeView, setActiveView] = useState<string>('dashboard');
 
-  // Stats for the dashboard
   const [stats, setStats] = useState({
     total: 0,
     pending: 0,
@@ -54,7 +52,6 @@ const Dashboard = () => {
           const userApplications = await db.getApplicationsByUserId(user.id);
           setApplications(userApplications);
           
-          // Calculate stats
           setStats({
             total: userApplications.length,
             pending: userApplications.filter(app => app.status === 'submitted').length,
@@ -106,7 +103,6 @@ const Dashboard = () => {
   };
 
   const formatApplicationId = (id: string) => {
-    // Extract just numbers from the id or use a counter
     const numPart = id.replace(/\D/g, '').slice(0, 4);
     return `APP${numPart.padStart(3, '0')}`;
   };
@@ -123,7 +119,6 @@ const Dashboard = () => {
       default:
         return (
           <>
-            {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <div className="bg-blue-50 p-6 rounded-lg shadow-sm flex items-center">
                 <div className="mr-4 p-3 bg-white rounded-full">
@@ -156,7 +151,6 @@ const Dashboard = () => {
               </div>
             </div>
             
-            {/* Tabs for Applications and Notifications */}
             <Tabs defaultValue="applications" className="mb-8">
               <TabsList className="border-b border-gray-200 w-full rounded-none bg-transparent p-0 mb-6">
                 <TabsTrigger 
@@ -266,7 +260,7 @@ const Dashboard = () => {
                           {(app.status === 'draft' || app.status === 'submitted') && (
                             <Button 
                               className="bg-ayush-green hover:bg-ayush-blue"
-                              onClick={() => navigate(`/application/${app.id}/edit`)}
+                              onClick={() => navigate(`/edit-application/${app.id}`)}
                             >
                               Edit Application
                             </Button>
@@ -317,7 +311,6 @@ const Dashboard = () => {
       
       <main className="flex-grow bg-gray-50">
         <div className="flex h-[calc(100vh-64px-80px)] overflow-hidden">
-          {/* Left Sidebar */}
           <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
             <div className="p-6 border-b border-gray-200 flex flex-col items-center">
               <div className="w-20 h-20 bg-ayush-green rounded-full flex items-center justify-center text-white text-2xl mb-3">
@@ -391,7 +384,6 @@ const Dashboard = () => {
             </div>
           </div>
           
-          {/* Main Content */}
           <div className="flex-1 overflow-auto p-6">
             <div className="max-w-6xl mx-auto">
               <div className="mb-6">
@@ -418,7 +410,6 @@ const Dashboard = () => {
   );
 };
 
-// Sample notifications data
 const notifications = [
   {
     id: 1,
