@@ -35,7 +35,6 @@ const ApplicationForm = () => {
     ideaExplanation: '',
   });
   
-  // Manage file uploads
   const [uploadedFiles, setUploadedFiles] = useState<{
     businessPlan: string | null;
     certificateOfIncorporation: string | null;
@@ -52,7 +51,6 @@ const ApplicationForm = () => {
     otherDocuments: null,
   });
 
-  // Check if user is logged in
   React.useEffect(() => {
     if (!user) {
       toast({
@@ -80,7 +78,6 @@ const ApplicationForm = () => {
   const handleFileUpload = (type: string, files: string | string[]) => {
     setUploadedFiles(prev => ({ ...prev, [type]: files }));
     
-    // Also add to documents array for submission
     const filesArray = Array.isArray(files) ? files : [files];
     setFormData(prev => ({
       ...prev, 
@@ -89,7 +86,6 @@ const ApplicationForm = () => {
   };
 
   const nextStep = () => {
-    // Basic validation for each step
     if (currentStep === 1) {
       if (!formData.companyName || !formData.businessType) {
         toast({
@@ -138,7 +134,6 @@ const ApplicationForm = () => {
         return;
       }
 
-      // Ensure we have the minimum required documents
       if (!uploadedFiles.certificateOfIncorporation || !uploadedFiles.businessPlan) {
         toast({
           title: "Missing Documents",
@@ -148,7 +143,6 @@ const ApplicationForm = () => {
         return;
       }
 
-      // Generate AI score for the application
       const { overallScore, status } = scoreApplication(
         formData.ideaExplanation,
         formData.description,
@@ -156,10 +150,9 @@ const ApplicationForm = () => {
         formData.documents
       );
 
-      // Create the application with the AI score
       const application = await db.createApplication({
         userId: user.id,
-        status, // Use AI-determined status
+        status: status as 'draft' | 'submitted' | 'under-review' | 'approved' | 'rejected',
         type: formData.businessType as 'ayurveda' | 'yoga' | 'unani' | 'siddha' | 'homeopathy',
         companyName: formData.companyName,
         documents: formData.documents,
@@ -191,7 +184,6 @@ const ApplicationForm = () => {
     }
   };
 
-  // Render step indicators
   const renderStepIndicator = (step: number, label: string) => {
     const isCurrent = currentStep === step;
     const isCompleted = currentStep > step;
@@ -209,7 +201,7 @@ const ApplicationForm = () => {
   };
 
   if (!user) {
-    return null; // Will be redirected via useEffect
+    return null;
   }
 
   return (
@@ -623,3 +615,4 @@ const ApplicationForm = () => {
 };
 
 export default ApplicationForm;
+

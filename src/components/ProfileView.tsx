@@ -5,7 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { User } from '@/lib/db';
 
 interface ProfileViewProps {
-  user: User;
+  user: {
+    id: string;
+    email: string;
+    fullName: string;
+    address: string;
+    role: 'startup' | 'official' | 'regulator';
+    createdAt: Date;
+  };
 }
 
 const ProfileView = ({ user }: ProfileViewProps) => {
@@ -31,7 +38,7 @@ const ProfileView = ({ user }: ProfileViewProps) => {
         </div>
         <div className="grid gap-2">
           <h3 className="text-sm font-medium text-gray-500">Account Created</h3>
-          <p>{new Date(user.createdAt).toLocaleDateString()}</p>
+          <p>{user.createdAt instanceof Date ? user.createdAt.toLocaleDateString() : new Date(user.createdAt).toLocaleDateString()}</p>
         </div>
       </CardContent>
     </Card>
