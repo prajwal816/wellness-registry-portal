@@ -6,6 +6,7 @@ import Login from '@/pages/Login';
 import Signup from '@/pages/Signup';
 import NotFound from '@/pages/NotFound';
 import Dashboard from '@/pages/Dashboard';
+import AuthSuccess from '@/pages/AuthSuccess';
 import FAQ from '@/pages/FAQ';
 import Resources from '@/pages/Resources';
 import ApplicationForm from '@/pages/ApplicationForm';
@@ -25,6 +26,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/auth/success" element={<AuthSuccess />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/resources" element={<Resources />} />

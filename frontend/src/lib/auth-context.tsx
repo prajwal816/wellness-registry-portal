@@ -1,6 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { db } from './db';
+import { authAPI } from './api';
 
 interface User {
   id: string;
@@ -18,6 +19,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, fullName: string, address: string, role: 'startup' | 'official' | 'regulator') => Promise<void>;
   logout: () => void;
+  googleLogin: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -117,10 +119,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('ayush_current_user');
+    localStorage.removeItem('token');
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, error, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, error, login, signup, logout, googleLogin: () => authAPI.googleLogin() }}>
       {children}
     </AuthContext.Provider>
   );

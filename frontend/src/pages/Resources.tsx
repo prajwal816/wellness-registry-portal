@@ -184,8 +184,8 @@ const Resources = () => {
                         The Drugs and Cosmetics Act, 1940 and Rules 1945 regulate the import, manufacture, distribution and sale of drugs and cosmetics, including AYUSH medicines.
                       </p>
                       <div className="flex items-center text-sm text-ayush-green">
-                        <Download size={16} className="mr-2" />
-                        <span>Download complete regulation document</span>
+                        <Link2 size={16} className="mr-2" />
+                        <span>View regulation details</span>
                       </div>
                     </div>
                     
@@ -195,8 +195,8 @@ const Resources = () => {
                         Requirements for obtaining manufacturing licenses for Ayurvedic, Siddha, Unani, and Homeopathic medicines under state licensing authorities.
                       </p>
                       <div className="flex items-center text-sm text-ayush-green">
-                        <Download size={16} className="mr-2" />
-                        <span>Download licensing guide</span>
+                        <Link2 size={16} className="mr-2" />
+                        <span>View licensing guide</span>
                       </div>
                     </div>
                     
@@ -206,8 +206,8 @@ const Resources = () => {
                         Specific GMP guidelines for AYUSH manufacturers to ensure quality, safety, and efficacy of products.
                       </p>
                       <div className="flex items-center text-sm text-ayush-green">
-                        <Download size={16} className="mr-2" />
-                        <span>Download GMP guidelines</span>
+                        <Link2 size={16} className="mr-2" />
+                        <span>View GMP guidelines</span>
                       </div>
                     </div>
                     
@@ -217,8 +217,8 @@ const Resources = () => {
                         Food Safety and Standards Authority of India regulations for AYUSH-based food supplements and nutraceuticals.
                       </p>
                       <div className="flex items-center text-sm text-ayush-green">
-                        <Download size={16} className="mr-2" />
-                        <span>Download FSSAI guidelines for AYUSH products</span>
+                        <Link2 size={16} className="mr-2" />
+                        <span>View FSSAI guidelines for AYUSH products</span>
                       </div>
                     </div>
                   </div>
@@ -291,8 +291,8 @@ const Resources = () => {
                         <span>Ayurvedic Pharmacopoeia</span>
                       </li>
                       <li className="flex items-center">
-                        <Download size={16} className="mr-2 text-ayush-green" />
-                        <span>Manufacturing Guidelines (PDF)</span>
+                        <Book size={16} className="mr-2 text-ayush-green" />
+                        <span>Manufacturing Guidelines</span>
                       </li>
                     </ul>
                   </CardContent>
@@ -317,8 +317,8 @@ const Resources = () => {
                         <span>Naturopathy Practice Guidelines</span>
                       </li>
                       <li className="flex items-center">
-                        <Download size={16} className="mr-2 text-ayush-blue" />
-                        <span>Center Establishment Guide (PDF)</span>
+                        <Book size={16} className="mr-2 text-ayush-blue" />
+                        <span>Center Establishment Guide</span>
                       </li>
                     </ul>
                   </CardContent>
@@ -343,8 +343,8 @@ const Resources = () => {
                         <span>Unani Pharmacopoeia</span>
                       </li>
                       <li className="flex items-center">
-                        <Download size={16} className="mr-2 text-ayush-saffron" />
-                        <span>Production Standards (PDF)</span>
+                        <Book size={16} className="mr-2 text-ayush-saffron" />
+                        <span>Production Standards</span>
                       </li>
                     </ul>
                   </CardContent>
@@ -369,8 +369,8 @@ const Resources = () => {
                         <span>Siddha Pharmacopoeia</span>
                       </li>
                       <li className="flex items-center">
-                        <Download size={16} className="mr-2 text-ayush-green" />
-                        <span>Quality Control Guidelines (PDF)</span>
+                        <Book size={16} className="mr-2 text-ayush-green" />
+                        <span>Quality Control Guidelines</span>
                       </li>
                     </ul>
                   </CardContent>
@@ -395,8 +395,8 @@ const Resources = () => {
                         <span>Clinical Research Guidelines</span>
                       </li>
                       <li className="flex items-center">
-                        <Download size={16} className="mr-2 text-ayush-blue" />
-                        <span>Manufacturing Standards (PDF)</span>
+                        <Book size={16} className="mr-2 text-ayush-blue" />
+                        <span>Manufacturing Standards</span>
                       </li>
                     </ul>
                   </CardContent>

@@ -55,7 +55,7 @@ const Index = () => {
         </section>
 
         {/* AYUSH sectors section */}
-        <section className="py-16 bg-white w-full">
+        <section className="py-16 bg-ayush-light-green w-full">
           <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold text-center text-ayush-blue mb-12">
               AYUSH Sectors
@@ -108,14 +108,14 @@ const Index = () => {
         </section>
 
         {/* Features section */}
-        <section className="py-16 bg-gray-50 w-full">
+        <section className="py-16 bg-gray-100 w-full">
           <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold text-center text-ayush-blue mb-12">
               Key Features
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <div className="bg-white p-8 rounded-lg shadow-md">
+              <div className="bg-white p-8 rounded-lg shadow-md flex flex-col items-center text-center">
                 <div className="bg-ayush-light-green p-3 rounded-full w-14 h-14 flex items-center justify-center mb-6">
                   <FileText className="text-ayush-green" size={24} />
                 </div>
@@ -128,7 +128,7 @@ const Index = () => {
                 </p>
               </div>
 
-              <div className="bg-white p-8 rounded-lg shadow-md">
+              <div className="bg-white p-8 rounded-lg shadow-md flex flex-col items-center text-center">
                 <div className="bg-ayush-light-blue p-3 rounded-full w-14 h-14 flex items-center justify-center mb-6">
                   <CheckCircle className="text-ayush-blue" size={24} />
                 </div>
@@ -141,7 +141,7 @@ const Index = () => {
                 </p>
               </div>
 
-              <div className="bg-white p-8 rounded-lg shadow-md">
+              <div className="bg-white p-8 rounded-lg shadow-md flex flex-col items-center text-center">
                 <div className="bg-ayush-light-saffron p-3 rounded-full w-14 h-14 flex items-center justify-center mb-6">
                   <Shield className="text-ayush-saffron" size={24} />
                 </div>
@@ -153,7 +153,7 @@ const Index = () => {
                 </p>
               </div>
 
-              <div className="bg-white p-8 rounded-lg shadow-md">
+              <div className="bg-white p-8 rounded-lg shadow-md flex flex-col items-center text-center">
                 <div className="bg-ayush-light-green p-3 rounded-full w-14 h-14 flex items-center justify-center mb-6">
                   <Users className="text-ayush-green" size={24} />
                 </div>
@@ -166,7 +166,7 @@ const Index = () => {
                 </p>
               </div>
 
-              <div className="bg-white p-8 rounded-lg shadow-md">
+              <div className="bg-white p-8 rounded-lg shadow-md flex flex-col items-center text-center">
                 <div className="bg-ayush-light-blue p-3 rounded-full w-14 h-14 flex items-center justify-center mb-6">
                   <Leaf className="text-ayush-blue" size={24} />
                 </div>
@@ -179,7 +179,7 @@ const Index = () => {
                 </p>
               </div>
 
-              <div className="bg-white p-8 rounded-lg shadow-md">
+              <div className="bg-white p-8 rounded-lg shadow-md flex flex-col items-center text-center">
                 <div className="bg-ayush-light-saffron p-3 rounded-full w-14 h-14 flex items-center justify-center mb-6">
                   <Shield className="text-ayush-saffron" size={24} />
                 </div>
@@ -223,7 +223,7 @@ const Index = () => {
                     <Link to="/resources">
                       <Button
                         variant="outline"
-                        className="w-full sm:w-auto border-white text-white hover:bg-white/10 px-8 py-6 text-lg"
+                        className="w-full sm:w-auto border-white text-ayush-green hover:bg-white/10 px-8 py-6 text-lg"
                       >
                         Learn More
                       </Button>
