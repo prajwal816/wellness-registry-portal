@@ -20,6 +20,9 @@ export default {
 		},
 		extend: {
 			colors: {
+				'ayush-green': '#2E947B',
+				'ayush-light-green': '#3EB99D',
+				'ayush-blue': '#2C4C7C',
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
