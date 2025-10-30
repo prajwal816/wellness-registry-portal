@@ -16,8 +16,8 @@ const Index = () => {
       <main className="flex-grow w-full">
         {/* Hero section */}
         <section className="hero-pattern py-16 md:py-24 w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl mx-auto text-center">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl font-bold text-ayush-blue mb-6">
                 AYUSH Startup Registration Portal
               </h1>
@@ -56,7 +56,7 @@ const Index = () => {
 
         {/* AYUSH sectors section */}
         <section className="py-16 bg-white w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold text-center text-ayush-blue mb-12">
               AYUSH Sectors
             </h2>
@@ -109,7 +109,7 @@ const Index = () => {
 
         {/* Features section */}
         <section className="py-16 bg-gray-50 w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold text-center text-ayush-blue mb-12">
               Key Features
             </h2>
@@ -197,8 +197,8 @@ const Index = () => {
 
         {/* CTA section */}
         <section className="py-16 bg-ayush-green text-white">
-          <div className="ayush-container">
-            <div className="max-w-3xl mx-auto text-center">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-3xl font-bold mb-6">
                 Ready to Register Your AYUSH Startup?
               </h2>
