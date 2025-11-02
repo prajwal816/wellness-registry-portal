@@ -20,7 +20,7 @@ import './App.css';
 function App() {
   return (
     <AuthProvider>
-      <Router>
+      <Router className="w-screen max-w-none overflow-x-hidden">
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/about" element={<About />} />

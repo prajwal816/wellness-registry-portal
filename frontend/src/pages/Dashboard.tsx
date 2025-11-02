@@ -31,6 +31,7 @@ const Dashboard = () => {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeView, setActiveView] = useState<string>('dashboard');
+  const [notifications, setNotifications] = useState([]);
 
   const [stats, setStats] = useState({
     total: 0,
@@ -306,11 +307,11 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen w-full">
       <Navbar />
       
       <main className="flex-grow bg-gray-50">
-        <div className="flex h-[calc(100vh-64px-80px)] overflow-hidden">
+        <div className="flex h-[calc(100vh-64px-80px)] overflow-hidden w-full">
           <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
             <div className="p-6 border-b border-gray-200 flex flex-col items-center">
               <div className="w-20 h-20 bg-ayush-green rounded-full flex items-center justify-center text-white text-2xl mb-3">

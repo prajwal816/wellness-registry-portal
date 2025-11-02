@@ -10,14 +10,14 @@ const Index = () => {
   const { user } = useAuth();
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen home-container">
       <Navbar />
 
       <main className="flex-grow w-full">
         {/* Hero section */}
         <section className="hero-pattern py-16 md:py-24 w-full">
-          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center">
+          <div className="w-full px-4 sm:px-6 lg:px-8">
+            <div className="w-full text-center">
               <h1 className="text-4xl md:text-5xl font-bold text-ayush-blue mb-6">
                 AYUSH Startup Registration Portal
               </h1>

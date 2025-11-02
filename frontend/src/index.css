@@ -3,6 +3,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Balanced layout */
+html, body, #root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Only expand homepage */
+.home-container {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
