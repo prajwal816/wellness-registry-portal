@@ -64,11 +64,11 @@ MONGODB_URI=mongodb+srv://prajwalimmadi103:prajwal1@cluster0.ht47adu.mongodb.net
 JWT_SECRET=6de6fea944f3fdfa6882d05fe931c2f8c810b8d1dd57aae3707810bb4c61e6c2
 GOOGLE_CLIENT_ID=779573780867-qnr2q9j5494nq67otldmkca25i98mqno.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=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
-CLIENT_URL=https://your-app-name.vercel.app
-GOOGLE_CALLBACK_URL=https://your-backend-name.onrender.com/api/auth/google/callback
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+CLIENT_URL=https://wellness-registry-portal.vercel.app
+GOOGLE_CALLBACK_URL=https://ayushwellness-backend.onrender.com/api/auth/google/callback
+CLOUDINARY_CLOUD_NAME=de59dyljj
+CLOUDINARY_API_KEY=629196129572578
+CLOUDINARY_API_SECRET=XRGsTKixK77I7g3yP_o61tpnew8
 PORT=5000
 NODE_ENV=production
 ```
@@ -84,58 +84,26 @@ NODE_ENV=production
 1. Click "Create Web Service"
 2. Render will automatically build and deploy using Docker
 3. Wait for deployment to complete (5-10 minutes)
-4. Note your backend URL: `https://your-backend-name.onrender.com`
+4. Note your backend URL: `https://ayushwellness-backend.onrender.com`
 
 ---
 
-## 2️⃣ Frontend Deployment on Vercel
+## 2️⃣ Frontend Deployment on Vercel ✅ COMPLETED
 
-### Step 1: Prepare Frontend
+Your frontend is already deployed at: **https://wellness-registry-portal.vercel.app**
 
-Your frontend is already configured with:
+### Update Environment Variables on Vercel
 
-- ✅ Environment variable support (`VITE_API_URL`)
-- ✅ API configuration file
-- ✅ Updated utilities to use dynamic API URLs
-
-### Step 2: Deploy to Vercel
-
-1. **Go to Vercel Dashboard**
-
-   - Visit [vercel.com](https://vercel.com)
-   - Sign up/Login with GitHub
-
-2. **Import Project**
-
-   - Click "New Project"
-   - Import your GitHub repository
-   - Select the repository
-
-3. **Configure Project Settings**
-   ```
-   Framework Preset: Vite
-   Root Directory: frontend
-   Build Command: npm run build
-   Output Directory: dist
-   Install Command: npm install
-   ```
-
-### Step 3: Set Environment Variables on Vercel
-
-In your Vercel project dashboard, go to "Settings" → "Environment Variables":
+In your Vercel project dashboard, go to "Settings" → "Environment Variables" and add:
 
 ```env
-VITE_API_URL=https://your-backend-name.onrender.com
+VITE_API_URL=https://ayushwellness-backend.onrender.com
 VITE_NODE_ENV=production
 ```
 
 **Replace `your-backend-name` with your actual Render service name**
 
-### Step 4: Deploy
-
-1. Click "Deploy"
-2. Vercel will build and deploy automatically
-3. Note your frontend URL: `https://your-app-name.vercel.app`
+After adding these variables, redeploy your Vercel app to apply the changes.
 
 ---
 
@@ -165,19 +133,36 @@ Then redeploy your backend service.
 3. **Add Authorized JavaScript Origins**
 
    ```
-   https://your-app-name.vercel.app
-   https://your-backend-name.onrender.com
+   https://wellness-registry-portal.vercel.app
+   https://ayushwellness-backend.onrender.com
    ```
 
 4. **Add Authorized Redirect URIs**
 
    ```
-   https://your-backend-name.onrender.com/api/auth/google/callback
+   https://ayushwellness-backend.onrender.com/api/auth/google/callback
    ```
 
 5. **Save Changes**
 
-### Step 3: Test Your Deployment
+### Step 3: Validate Your Configuration
+
+Before testing, validate your URL configuration:
+
+**Backend Validation:**
+
+```bash
+cd backend
+node scripts/validate-urls.js
+```
+
+**Frontend Validation:**
+
+- Open browser developer console on your Vercel app
+- Check for configuration validation logs
+- Look for any CORS or API connection errors
+
+### Step 4: Test Your Deployment
 
 1. **Visit your frontend URL**
 2. **Test authentication**
@@ -195,8 +180,8 @@ MONGODB_URI=mongodb+srv://prajwalimmadi103:prajwal1@cluster0.ht47adu.mongodb.net
 JWT_SECRET=6de6fea944f3fdfa6882d05fe931c2f8c810b8d1dd57aae3707810bb4c61e6c2
 GOOGLE_CLIENT_ID=779573780867-qnr2q9j5494nq67otldmkca25i98mqno.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=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
-CLIENT_URL=https://your-app-name.vercel.app
-GOOGLE_CALLBACK_URL=https://your-backend-name.onrender.com/api/auth/google/callback
+CLIENT_URL=https://wellness-registry-portal.vercel.app
+GOOGLE_CALLBACK_URL=https://ayushwellness-backend.onrender.com/api/auth/google/callback
 CLOUDINARY_CLOUD_NAME=your_actual_cloud_name
 CLOUDINARY_API_KEY=your_actual_api_key
 CLOUDINARY_API_SECRET=your_actual_api_secret
@@ -207,7 +192,7 @@ NODE_ENV=production
 ### Vercel (Frontend)
 
 ```env
-VITE_API_URL=https://your-backend-name.onrender.com
+VITE_API_URL=https://ayushwellness-backend.onrender.com
 VITE_NODE_ENV=production
 ```
 
@@ -250,8 +235,8 @@ VITE_NODE_ENV=production
 After successful deployment, you'll have:
 
 ```
-Frontend: https://your-app-name.vercel.app
-Backend:  https://your-backend-name.onrender.com
+Frontend: https://wellness-registry-portal.vercel.app
+Backend:  https://ayushwellness-backend.onrender.com
 Database: MongoDB Atlas (existing)
 Storage:  Cloudinary (existing)
 ```

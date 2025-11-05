@@ -16,28 +16,57 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-// CORS configuration for production
+// CORS configuration for production and development
+const getAllowedOrigins = () => {
+  const origins = [
+    // Primary client URL (Vercel deployment)
+    process.env.CLIENT_URL,
+
+    // Local development URLs
+    'http://localhost:3000',
+    'http://localhost:8080',
+    'http://localhost:5173',
+    'http://localhost:4173',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:8080',
+    'http://127.0.0.1:5173'
+  ];
+
+  // Filter out undefined/null values
+  return origins.filter(Boolean);
+};
+
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
+    // Allow requests with no origin (like mobile apps, curl, or Postman)
     if (!origin) return callback(null, true);
 
-    const allowedOrigins = [
-      process.env.CLIENT_URL,
-      'http://localhost:3000',
-      'http://localhost:8080',
-      'http://localhost:5173'
-    ].filter(Boolean);
+    const allowedOrigins = getAllowedOrigins();
+
+    // Log allowed origins in development
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Allowed CORS origins:', allowedOrigins);
+      console.log('Request origin:', origin);
+    }
 
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      console.error(`CORS blocked origin: ${origin}`);
+      callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'x-auth-token',
+    'Accept',
+    'Origin',
+    'X-Requested-With'
+  ],
+  exposedHeaders: ['x-auth-token']
 };
 
 app.use(cors(corsOptions));

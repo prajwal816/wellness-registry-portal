@@ -27,6 +27,14 @@ export const createApiUrl = (endpoint: string): string => {
   return `${API_CONFIG.BASE_URL}${endpoint}`;
 };
 
-// Environment check
+// Environment utilities
 export const isDevelopment = import.meta.env.VITE_NODE_ENV === 'development';
 export const isProduction = import.meta.env.VITE_NODE_ENV === 'production';
+
+// Debug information (only in development)
+if (isDevelopment) {
+  console.log('API Configuration:', {
+    currentEnvironment: import.meta.env.VITE_NODE_ENV,
+    baseUrl: API_BASE_URL
+  });
+}
