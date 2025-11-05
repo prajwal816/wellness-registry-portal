@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:5000/api';
+import { API_CONFIG, createApiUrl } from '@/config/api';
 
 export interface UploadResponse {
   message: string;
@@ -36,7 +35,7 @@ export const uploadFile = async (file: File, token?: string): Promise<UploadResp
     }
   };
 
-  const response = await axios.post(`${API_BASE_URL}/upload/single`, formData, config);
+  const response = await axios.post(createApiUrl(API_CONFIG.ENDPOINTS.UPLOAD.SINGLE), formData, config);
   return response.data;
 };
 
@@ -54,7 +53,7 @@ export const uploadMultipleFiles = async (files: File[], token?: string): Promis
     }
   };
 
-  const response = await axios.post(`${API_BASE_URL}/upload/multiple`, formData, config);
+  const response = await axios.post(createApiUrl(API_CONFIG.ENDPOINTS.UPLOAD.MULTIPLE), formData, config);
   return response.data;
 };
 
@@ -70,7 +69,7 @@ export const uploadAvatar = async (file: File, token: string): Promise<{ message
     }
   };
 
-  const response = await axios.post(`${API_BASE_URL}/auth/avatar`, formData, config);
+  const response = await axios.post(createApiUrl(API_CONFIG.ENDPOINTS.AUTH.AVATAR), formData, config);
   return response.data;
 };
 
@@ -82,7 +81,7 @@ export const deleteFile = async (publicId: string, token?: string): Promise<{ me
     }
   };
 
-  const response = await axios.delete(`${API_BASE_URL}/upload/${publicId}`, config);
+  const response = await axios.delete(`${createApiUrl(API_CONFIG.ENDPOINTS.UPLOAD.DELETE)}/${publicId}`, config);
   return response.data;
 };
 
@@ -94,7 +93,7 @@ export const getFileInfo = async (publicId: string, token?: string) => {
     }
   };
 
-  const response = await axios.get(`${API_BASE_URL}/upload/info/${publicId}`, config);
+  const response = await axios.get(`${createApiUrl(API_CONFIG.ENDPOINTS.UPLOAD.INFO)}/${publicId}`, config);
   return response.data;
 };
 
