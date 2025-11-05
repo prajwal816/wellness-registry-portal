@@ -7,7 +7,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: '/api/auth/google/callback',
+      callbackURL: process.env.GOOGLE_CALLBACK_URL || `http://localhost:${process.env.PORT || 5000}/api/auth/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -23,7 +23,10 @@ passport.use(
           googleId: profile.id,
           email: profile.emails[0].value,
           name: profile.displayName,
-          avatar: profile.photos[0].value,
+          avatar: {
+            url: profile.photos[0].value,
+            publicId: null // Google photos don't have Cloudinary publicId
+          },
         });
 
         await user.save();

@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const User = require('../models/User');
+const { upload, cloudinary } = require('../config/cloudinary');
 
 // Register a new user
 router.post('/register', async (req, res) => {
@@ -121,6 +122,53 @@ router.get('/me', async (req, res) => {
     }
     
     res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Update user avatar
+router.post('/avatar', upload.single('avatar'), async (req, res) => {
+  try {
+    const token = req.header('x-auth-token');
+    
+    if (!token) {
+      return res.status(401).json({ message: 'No token, authorization denied' });
+    }
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    if (!req.file) {
+      return res.status(400).json({ message: 'No avatar file uploaded' });
+    }
+    
+    // Delete old avatar from Cloudinary if it exists
+    if (user.avatar.publicId) {
+      try {
+        await cloudinary.uploader.destroy(user.avatar.publicId);
+      } catch (error) {
+        console.error('Error deleting old avatar:', error);
+      }
+    }
+    
+    // Update user avatar
+    user.avatar = {
+      url: req.file.path,
+      publicId: req.file.filename
+    };
+    
+    await user.save();
+    
+    res.json({
+      message: 'Avatar updated successfully',
+      avatar: user.avatar
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });

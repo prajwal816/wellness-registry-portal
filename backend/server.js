@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const passport = require('passport');
 const authRoutes = require('./routes/auth');
 const applicationRoutes = require('./routes/applications');
+const uploadRoutes = require('./routes/upload');
 
 // Load environment variables
 dotenv.config();
@@ -31,6 +32,7 @@ mongoose.connect(process.env.MONGODB_URI)
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/applications', applicationRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
