@@ -406,7 +406,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## 📞 Support
 
-For support, email your-email@example.com or open an issue in the GitHub repository.
+For support, email prajwal1084@gmail.com or open an issue in the GitHub repository.
 
 ---
 
