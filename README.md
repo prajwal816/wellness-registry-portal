@@ -2,7 +2,7 @@
 
 Welcome to the AYUSH Wellness Registry Portal, a comprehensive platform for registering and managing startups in the Ayurveda, Yoga, Unani, Siddha, and Homeopathy sectors. Streamline your registration process and connect with regulatory bodies seamlessly.
 
-![AYUSH Portal Screenshot](./frontend/src/assets/ayush-portal-screenshot.png)
+![AYUSH Portal Screenshot](./frontend/src/components/homepage.png)
 
 ---
 
