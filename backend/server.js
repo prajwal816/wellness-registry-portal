@@ -43,15 +43,19 @@ const corsOptions = {
 
     const allowedOrigins = getAllowedOrigins();
 
-    // Log allowed origins in development
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('Allowed CORS origins:', allowedOrigins);
-      console.log('Request origin:', origin);
-    }
+    // Log request origin
+    console.log('Request origin:', origin);
 
+    // Check if origin is in allowed list
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
-    } else {
+    }
+    // Allow all Vercel preview deployments (*.vercel.app)
+    else if (origin && origin.includes('.vercel.app')) {
+      console.log('Allowing Vercel preview deployment:', origin);
+      callback(null, true);
+    }
+    else {
       console.error(`CORS blocked origin: ${origin}`);
       callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
     }
