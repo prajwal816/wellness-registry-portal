@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { API_CONFIG } from '@/config/api';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = API_CONFIG.BASE_URL;
 
 // Create axios instance
 const api = axios.create({
@@ -29,7 +30,7 @@ export const authAPI = {
   register: (userData: any) => api.post('/auth/register', userData),
   login: (credentials: any) => api.post('/auth/login', credentials),
   getCurrentUser: () => api.get('/auth/me'),
-  googleLogin: () => window.location.href = `${API_URL}/auth/google`
+  googleLogin: () => window.location.href = `${API_URL}/api/auth/google`
 };
 
 // Applications API

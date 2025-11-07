@@ -1,15 +1,6 @@
 // API Configuration
-const getApiBaseUrl = () => {
-  // Force production URL if in production environment
-  if (import.meta.env.PROD || import.meta.env.VITE_NODE_ENV === 'production') {
-    return 'https://ayushwellness-backend.onrender.com';
-  }
-  
-  // Use environment variable or fallback to localhost for development
-  return import.meta.env.VITE_API_URL || 'http://localhost:5000';
-};
-
-const API_BASE_URL = getApiBaseUrl();
+// Force production URL for now to fix deployment issue
+const API_BASE_URL = 'https://ayushwellness-backend.onrender.com';
 
 export const API_CONFIG = {
   BASE_URL: API_BASE_URL,
