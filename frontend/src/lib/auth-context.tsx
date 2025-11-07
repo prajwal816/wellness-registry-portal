@@ -149,6 +149,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signup,
         logout,
         googleLogin: () => authAPI.googleLogin(),
+        refreshUser,
       }}
     >
       {children}

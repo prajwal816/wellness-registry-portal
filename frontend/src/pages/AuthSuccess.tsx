@@ -3,10 +3,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { authAPI } from "@/lib/api";
+import { useAuth } from "@/lib/auth-context";
 
 const AuthSuccess = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { refreshUser } = useAuth();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -44,8 +46,12 @@ const AuthSuccess = () => {
           };
 
           localStorage.setItem("ayush_current_user", JSON.stringify(safeUser));
+          console.log("AuthSuccess: User saved to localStorage");
+
+          // Refresh the auth context with the new user
+          refreshUser();
           console.log(
-            "AuthSuccess: User saved to localStorage, redirecting to dashboard"
+            "AuthSuccess: Auth context refreshed, redirecting to dashboard"
           );
 
           navigate("/dashboard");
