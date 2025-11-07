@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { db } from "./db";
 import { authAPI } from "./api";
 
 interface User {
@@ -49,30 +48,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setError(null);
 
     try {
-      const foundUser = await db.getUserByEmail(email);
+      // Use backend API for login
+      const response = await authAPI.login({ email, password });
+      const { token, user: backendUser } = response.data;
 
-      if (!foundUser || foundUser.password !== password) {
-        throw new Error("Invalid email or password");
-      }
+      // Save token
+      localStorage.setItem("token", token);
 
-      // Create a safe user object without the password
+      // Map backend user to frontend user shape
       const safeUser = {
-        id: foundUser.id,
-        email: foundUser.email,
-        fullName: foundUser.fullName,
-        address: foundUser.address,
-        role: foundUser.role,
-        createdAt: foundUser.createdAt,
+        id: backendUser.id || backendUser._id,
+        email: backendUser.email,
+        fullName: backendUser.name || backendUser.fullName || "User",
+        address: backendUser.address || "",
+        role:
+          backendUser.role === "admin" || backendUser.role === "reviewer"
+            ? "official"
+            : "startup",
+        createdAt: backendUser.createdAt
+          ? new Date(backendUser.createdAt)
+          : new Date(),
       };
 
       setUser(safeUser);
 
       // Store user in localStorage
       localStorage.setItem("ayush_current_user", JSON.stringify(safeUser));
-    } catch (err) {
+    } catch (err: any) {
       setError(
-        err instanceof Error ? err.message : "An unknown error occurred"
+        err.response?.data?.message ||
+          err.message ||
+          "An unknown error occurred"
       );
+      throw err;
     } finally {
       setIsLoading(false);
     }
@@ -89,38 +97,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setError(null);
 
     try {
-      const existingUser = await db.getUserByEmail(email);
-
-      if (existingUser) {
-        throw new Error("Email already in use");
-      }
-
-      const newUser = await db.createUser({
+      // Use backend API for registration
+      const response = await authAPI.register({
+        name: fullName,
         email,
         password,
-        fullName,
-        address,
-        role,
       });
+      const { token, user: backendUser } = response.data;
 
-      // Create a safe user object without the password
+      // Save token
+      localStorage.setItem("token", token);
+
+      // Map backend user to frontend user shape
       const safeUser = {
-        id: newUser.id,
-        email: newUser.email,
-        fullName: newUser.fullName,
-        address: newUser.address,
-        role: newUser.role,
-        createdAt: newUser.createdAt,
+        id: backendUser.id || backendUser._id,
+        email: backendUser.email,
+        fullName: backendUser.name || fullName,
+        address: address,
+        role:
+          backendUser.role === "admin" || backendUser.role === "reviewer"
+            ? "official"
+            : "startup",
+        createdAt: backendUser.createdAt
+          ? new Date(backendUser.createdAt)
+          : new Date(),
       };
 
       setUser(safeUser);
 
       // Store user in localStorage
       localStorage.setItem("ayush_current_user", JSON.stringify(safeUser));
-    } catch (err) {
+    } catch (err: any) {
       setError(
-        err instanceof Error ? err.message : "An unknown error occurred"
+        err.response?.data?.message ||
+          err.message ||
+          "An unknown error occurred"
       );
+      throw err;
     } finally {
       setIsLoading(false);
     }
