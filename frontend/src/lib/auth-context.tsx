@@ -136,11 +136,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Store user in localStorage
       localStorage.setItem("ayush_current_user", JSON.stringify(safeUser));
     } catch (err: any) {
-      setError(
-        err.response?.data?.message ||
-          err.message ||
-          "An unknown error occurred"
-      );
+      console.error("Signup error:", err);
+      let errorMessage = "An unknown error occurred";
+
+      if (err.code === "ERR_NETWORK" || err.message === "Network Error") {
+        errorMessage =
+          "Cannot connect to server. The backend may be starting up (this can take 30-60 seconds on first request). Please try again in a moment.";
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
+      setError(errorMessage);
       throw err;
     } finally {
       setIsLoading(false);
