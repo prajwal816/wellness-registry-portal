@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { authAPI } from "./api";
+import { registerWithRetry, loginWithRetry } from "./api-with-retry";
 
 interface User {
   id: string;
@@ -48,8 +49,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setError(null);
 
     try {
-      // Use backend API for login
-      const response = await authAPI.login({ email, password });
+      // Use backend API for login with automatic retry
+      const response = await loginWithRetry(
+        { email, password },
+        (attempt, maxAttempts) => {
+          setError(
+            `Backend is waking up... Retrying (attempt ${attempt}/${maxAttempts})`
+          );
+        }
+      );
       const { token, user: backendUser } = response.data;
 
       // Save token
@@ -105,12 +113,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setError(null);
 
     try {
-      // Use backend API for registration
-      const response = await authAPI.register({
-        name: fullName,
-        email,
-        password,
-      });
+      // Use backend API for registration with automatic retry
+      const response = await registerWithRetry(
+        {
+          name: fullName,
+          email,
+          password,
+        },
+        (attempt, maxAttempts) => {
+          setError(
+            `Backend is waking up... Retrying (attempt ${attempt}/${maxAttempts}). Please wait...`
+          );
+        }
+      );
       const { token, user: backendUser } = response.data;
 
       // Save token
