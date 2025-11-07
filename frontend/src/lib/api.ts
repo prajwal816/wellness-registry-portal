@@ -27,21 +27,21 @@ api.interceptors.request.use(
 
 // Auth API
 export const authAPI = {
-  register: (userData: any) => api.post('/auth/register', userData),
-  login: (credentials: any) => api.post('/auth/login', credentials),
-  getCurrentUser: () => api.get('/auth/me'),
+  register: (userData: any) => api.post('/api/auth/register', userData),
+  login: (credentials: any) => api.post('/api/auth/login', credentials),
+  getCurrentUser: () => api.get('/api/auth/me'),
   googleLogin: () => window.location.href = `${API_URL}/api/auth/google`
 };
 
 // Applications API
 export const applicationsAPI = {
-  getAll: () => api.get('/applications'),
-  getUserApplications: () => api.get('/applications/my-applications'),
-  getById: (id: string) => api.get(`/applications/${id}`),
-  create: (applicationData: any) => api.post('/applications', applicationData),
-  update: (id: string, applicationData: any) => api.put(`/applications/${id}`, applicationData),
-  updateStatus: (id: string, statusData: any) => api.patch(`/applications/${id}/status`, statusData),
-  delete: (id: string) => api.delete(`/applications/${id}`)
+  getAll: () => api.get('/api/applications'),
+  getUserApplications: () => api.get('/api/applications/my-applications'),
+  getById: (id: string) => api.get(`/api/applications/${id}`),
+  create: (applicationData: any) => api.post('/api/applications', applicationData),
+  update: (id: string, applicationData: any) => api.put(`/api/applications/${id}`, applicationData),
+  updateStatus: (id: string, statusData: any) => api.patch(`/api/applications/${id}/status`, statusData),
+  delete: (id: string) => api.delete(`/api/applications/${id}`)
 };
 
 export default api;
