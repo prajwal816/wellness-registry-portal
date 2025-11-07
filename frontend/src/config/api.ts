@@ -1,5 +1,15 @@
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const getApiBaseUrl = () => {
+  // Force production URL if in production environment
+  if (import.meta.env.PROD || import.meta.env.VITE_NODE_ENV === 'production') {
+    return 'https://ayushwellness-backend.onrender.com';
+  }
+  
+  // Use environment variable or fallback to localhost for development
+  return import.meta.env.VITE_API_URL || 'http://localhost:5000';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 export const API_CONFIG = {
   BASE_URL: API_BASE_URL,
@@ -31,10 +41,12 @@ export const createApiUrl = (endpoint: string): string => {
 export const isDevelopment = import.meta.env.VITE_NODE_ENV === 'development';
 export const isProduction = import.meta.env.VITE_NODE_ENV === 'production';
 
-// Debug information (only in development)
-if (isDevelopment) {
-  console.log('API Configuration:', {
-    currentEnvironment: import.meta.env.VITE_NODE_ENV,
-    baseUrl: API_BASE_URL
-  });
-}
+// Debug information (always show in console for troubleshooting)
+console.log('API Configuration:', {
+  currentEnvironment: import.meta.env.VITE_NODE_ENV,
+  isProd: import.meta.env.PROD,
+  viteApiUrl: import.meta.env.VITE_API_URL,
+  baseUrl: API_BASE_URL,
+  isDevelopment,
+  isProduction
+});

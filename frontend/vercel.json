@@ -1,0 +1,13 @@
+{
+  "build": {
+    "env": {
+      "VITE_API_URL": "https://ayushwellness-backend.onrender.com",
+      "VITE_NODE_ENV": "production"
+    }
+  },
+  "functions": {
+    "app/api/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  }
+}
