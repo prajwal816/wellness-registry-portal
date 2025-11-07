@@ -14,13 +14,12 @@ import EditApplication from "@/pages/EditApplication";
 import { AuthProvider } from "@/lib/auth-context";
 import { Toaster } from "@/components/ui/toaster";
 import AyushChatbot from "@/components/AyushChatbot";
-import { BackendStatus } from "@/components/BackendStatus";
+
 import "./App.css";
 
 function App() {
   return (
     <AuthProvider>
-      <BackendStatus />
       <Router className="w-screen max-w-none overflow-x-hidden">
         <Routes>
           <Route path="/" element={<Index />} />
